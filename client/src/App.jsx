@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FileText, Send, CheckCircle, XCircle, Clock, Upload, LogOut, KeyRound, ExternalLink, ShieldAlert } from 'lucide-react';
 
+const API_BASE_URL = 'https://doc-system-api.onrender.com';
+
 export default function App() {
   // 1. State ทั้งหมด
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -34,7 +36,7 @@ export default function App() {
 
     try {
       // ส่งทั้ง department และ role ไปให้ Backend ตรวจสอบ
-      const res = await axios.get('http://localhost:5000/api/documents', {
+      const res = await axios.get(`${API_BASE_URL}/api/documents`, {
         params: { 
           department: userData.department,
           role: userData.role
@@ -57,7 +59,7 @@ export default function App() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:5000/api/login', { username, password });
+      const res = await axios.post(`${API_BASE_URL}/api/login`, { username, password });
       setUser(res.data.user);
       setIsLoggedIn(true);
     } catch (err) {
@@ -69,7 +71,7 @@ export default function App() {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/register', {
+      await axios.post(`${API_BASE_URL}/api/register`, {
         username,
         password,
         fullname: regFullname,
@@ -90,7 +92,7 @@ export default function App() {
   const handleResetPassword = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:5000/api/reset-password', {
+      const res = await axios.post(`${API_BASE_URL}/api/reset-password`, {
         username,
         newPassword
       });
@@ -118,7 +120,7 @@ export default function App() {
     formData.append('file', file);
 
     try {
-      await axios.post('http://localhost:5000/api/documents', formData);
+      await axios.post(`${API_BASE_URL}/api/documents`, formData);
       alert('ส่งเอกสารเรียบร้อยแล้ว');
       setTitle(''); setDocNumber(''); setReceiverDept(''); setFile(null);
       fetchDocuments(user);
@@ -130,7 +132,7 @@ export default function App() {
   // ฟังก์ชันอัปเดตสถานะ
   const handleStatusChange = async (id, status) => {
     try {
-      await axios.put(`http://localhost:5000/api/documents/${id}/status`, { status });
+      await axios.put(`${API_BASE_URL}/api/documents/${id}/status`, { status });
       fetchDocuments(user);
     } catch (err) {
       alert('ไม่สามารถอัปเดตสถานะได้');
@@ -285,7 +287,7 @@ export default function App() {
                 {documents.map((doc) => {
                   const filePath = doc.file_path || doc.filepath || doc.path;
                   const fileUrl = filePath 
-                    ? `http://localhost:5000/${filePath.replace(/\\/g, '/')}`
+                    ? `${API_BASE_URL}/${filePath.replace(/\\/g, '/')}`
                     : null;
 
                   return (
