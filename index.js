@@ -6,7 +6,8 @@ const path = require('path');
 const fs = require('fs');
 
 const app = express();
-const PORT = 5000;
+// แก้ไขพอร์ตให้รองรับระบบ Cloud ของ Render ผ่าน process.env.PORT
+const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors());
@@ -187,5 +188,5 @@ app.put('/api/documents/:id/status', async (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`🚀 Backend Server รันอยู่ที่ http://localhost:${PORT}`);
+    console.log(`🚀 Backend Server รันอยู่ที่พอร์ต ${PORT}`);
 });
